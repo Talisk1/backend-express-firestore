@@ -32,6 +32,12 @@ app.get('/atractivos/:id', async (req, res) => {
   res.json(item);
 });
 
+// Buscar por nombre y/o ubicacion (parcial, sin distinguir mayusculas)
+app.get('/buscar', async (req, res) => {
+  const { nombre = '', ubicacion = '' } = req.query;
+  res.json(await db.search({ nombre, ubicacion }));
+});
+
 // Crear un atractivo
 app.post('/atractivos', async (req, res) => {
   const error = validar(req.body);
