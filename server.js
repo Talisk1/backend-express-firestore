@@ -62,4 +62,16 @@ app.delete('/atractivos/:id', async (req, res) => {
   res.json({ mensaje: 'Atractivo eliminado correctamente' });
 });
 
+// Ruta inexistente
+app.use((_, res) => res.status(404).json({ error: 'Ruta no encontrada' }));
+
+// Manejo central de errores (JSON invalido, fallos de Firestore, etc.)
+app.use((err, _req, res, _next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: 'El cuerpo de la solicitud no es un JSON valido.' });
+  }
+  console.error(err);
+  res.status(500).json({ error: 'Error interno del servidor' });
+});
+
 app.listen(PORT, () => console.log(`API Firestore lista en http://localhost:${PORT}`));
